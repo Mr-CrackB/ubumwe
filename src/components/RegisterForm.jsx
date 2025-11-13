@@ -176,7 +176,7 @@ export default function RegisterForm({ onSuccess }) {
       </div>
 
       {/* Right: Welcome title */}
-      <h1 className="welcome-title">WELCOME TO UBUMWE DATABASE SYSTEM</h1>
+      <h1 className="welcome-title">WELCOME TO SONAMOVIE</h1>
     </div>
   );
 }
