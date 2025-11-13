@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { User, Mail, Lock, Phone, Loader2 } from "lucide-react";
-import "./RegisterForm.css"; // Make sure to include the CSS we updated
+import "./RegisterForm.css"; // Include your styling
 
-export default function RegisterForm() {
+export default function RegisterForm({ onSuccess }) {
+  // ✅ Accept the callback
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
     email: "",
     password: "",
-    telephone: ""
+    telephone: "",
   });
 
   const [loading, setLoading] = useState(false);
@@ -50,16 +51,35 @@ export default function RegisterForm() {
       const res = await fetch(BACKEND_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form)
+        body: JSON.stringify(form),
       });
 
       const data = await res.json();
 
       if (data.status === "success") {
-        setMessage({ text: data.message || "Registration successful!", type: "success" });
-        setForm({ firstName: "", lastName: "", email: "", password: "", telephone: "" });
+        setMessage({
+          text:
+            data.message ||
+            "Registration successful! Redirecting to Dashboard...",
+          type: "success",
+        });
+
+        // ✅ Call the parent callback to switch views
+        if (onSuccess) onSuccess();
+
+        // Reset form
+        setForm({
+          firstName: "",
+          lastName: "",
+          email: "",
+          password: "",
+          telephone: "",
+        });
       } else {
-        setMessage({ text: data.message || "Registration failed.", type: "error" });
+        setMessage({
+          text: data.message || "Registration failed.",
+          type: "error",
+        });
       }
     } catch (error) {
       console.error("Register error:", error);
@@ -67,7 +87,7 @@ export default function RegisterForm() {
         text: error.message.includes("Failed to fetch")
           ? "Network error or CORS issue. Check backend settings."
           : error.message,
-        type: "error"
+        type: "error",
       });
     } finally {
       setLoading(false);
@@ -80,7 +100,6 @@ export default function RegisterForm() {
       <div className="register-container">
         <h2 className="register-title">Create Your Account</h2>
         <form onSubmit={handleSubmit} className="register-form">
-          {/* First and Last Name */}
           <div className="form-row">
             <div className="input-group">
               <User className="icon" />
@@ -102,7 +121,6 @@ export default function RegisterForm() {
             </div>
           </div>
 
-          {/* Email */}
           <div className="input-group">
             <Mail className="icon" />
             <input
@@ -114,7 +132,6 @@ export default function RegisterForm() {
             />
           </div>
 
-          {/* Telephone */}
           <div className="input-group">
             <Phone className="icon" />
             <input
@@ -126,7 +143,6 @@ export default function RegisterForm() {
             />
           </div>
 
-          {/* Password */}
           <div className="input-group">
             <Lock className="icon" />
             <input
@@ -138,24 +154,29 @@ export default function RegisterForm() {
             />
           </div>
 
-          {/* Submit */}
           <button type="submit" disabled={loading} className="submit-btn">
-            {loading ? <><Loader2 className="spin" /> Registering...</> : "Register"}
+            {loading ? (
+              <>
+                <Loader2 className="spin" /> Registering...
+              </>
+            ) : (
+              "Register"
+            )}
           </button>
         </form>
 
-        {/* Message */}
-        {message && <div className={`message ${message.type}`}>{message.text}</div>}
+        {message && (
+          <div className={`message ${message.type}`}>{message.text}</div>
+        )}
 
         <p className="terms">
-          By signing up, you agree to our <a href="#">Terms</a> and <a href="#">Privacy Policy</a>.
+          By signing up, you agree to our <a href="#">Terms</a> and{" "}
+          <a href="#">Privacy Policy</a>.
         </p>
       </div>
 
       {/* Right: Welcome title */}
-      <h1 className="welcome-title">
-        WELCOME TO UBUMWE DATABASE SYSTEM
-      </h1>
+      <h1 className="welcome-title">WELCOME TO UBUMWE DATABASE SYSTEM</h1>
     </div>
   );
 }

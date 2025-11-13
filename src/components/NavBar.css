@@ -1,0 +1,4 @@
+.navbar { display: flex; justify-content: space-between; align-items: center; padding: 1rem; background-color: #fff; box-shadow: 0 1px 4px rgba(0,0,0,0.1); }
+.navbar-right { font-weight: bold; }
+.search-input { padding: 0.5rem 1rem; border: 1px solid #ccc; border-radius: 8px; outline: none; }
+.search-input:focus { border-color: #4f46e5; box-shadow: 0 0 6px rgba(79, 70, 229, 0.25); }
